@@ -66,3 +66,36 @@ body {
 .box.active .info {
     display: block;
 }
+
+#todo-list {
+    border: 2px solid #EF7179;
+    padding: 15px;
+    width: 300px;
+    margin: 20px;
+    float: right;
+    font-family: "Lucida Console", "Courier New", monospace;
+}
+
+#todo-list h2 {
+    text-align: center;
+    color: #333;
+    font-size: 20px;
+}
+
+#todo-list ul {
+    list-style-type: disc;
+    padding-left: 20px;
+}
+
+#todo-list ul ul {
+    list-style-type: circle;
+    padding-left: 20px;
+}
+
+#todo-list li {
+    margin-bottom: 8px;
+}
+
+#todo-list li strong {
+    color: #333;
+}
