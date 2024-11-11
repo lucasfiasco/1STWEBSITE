@@ -1,0 +1,68 @@
+body {
+    background-color: aliceblue;
+    font-family: "Lucida Console", "Courier New", monospace;
+}
+
+#title {
+    text-align: center;
+    font-family: "Lucida Console", "Courier New", monospace;
+    margin-top: 20px;
+    font-size: 45px;
+}
+#subtitle {
+    text-align: center;
+    font-family: "Lucida Console", "Courier New", monospace;
+    font-size: 20px;
+}
+
+#introduction {
+    font-family: "Lucida Console", "Courier New", monospace;
+    text-align: center;
+    text-decoration: underline;
+    margin-top: 100px;
+}
+
+#intro-box {
+    background-color: #9ECE6A;
+    padding: 20px;
+    width: 80%;
+    margin: 20px auto;
+    border-radius: 15px;
+    font-family: "Lucida Console", "Courier New", monospace;
+    font-size: 16px;
+    color: #333;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 300px);
+    grid-gap: 50px; 
+    justify-content: center;
+    margin-top: 55px;
+}
+
+.box {
+    border-radius: 25px;
+    background-color: #ffcdfc;
+    padding: 20px;
+    width: 200px;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.info {
+    display: none;
+    margin-top: 10px;
+    color: #333;
+}
+
+.box.active .info {
+    display: block;
+}
