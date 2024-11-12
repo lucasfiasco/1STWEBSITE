@@ -9,6 +9,7 @@ body {
     margin-top: 20px;
     font-size: 45px;
 }
+
 #subtitle {
     text-align: center;
     font-family: "Lucida Console", "Courier New", monospace;
@@ -34,10 +35,11 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     text-align: center;
 }
+
 .grid-container {
     display: grid;
     grid-template-columns: repeat(3, 300px);
-    grid-gap: 50px; 
+    grid-gap: 50px;
     justify-content: center;
     margin-top: 55px;
 }
@@ -99,3 +101,71 @@ body {
 #todo-list li strong {
     color: #333;
 }
+
+#python-section {
+    border: 2px solid #FFCC00; /* More saturated yellow border */
+    padding: 15px;
+    width: calc(65% + 75px);
+    margin: 20px 10px 20px 20px;
+    font-family: "Lucida Console", "Courier New", monospace;
+    background-color: #CFE2F3; /* Lighter, neutral pastel blue */
+    color: #333; /* Dark text for better readability */
+    border-radius: 8px;
+    float: left;
+}
+
+#python-section h2 {
+    text-align: center;
+    color: #FFCC00; /* Matching saturated yellow for the header */
+    font-size: 20px;
+}
+
+#python-section img {
+    display: block;
+    margin: 10px auto;
+}
+
+.toggle-button {
+    font-size: 18px;
+    cursor: pointer;
+    color: #FFCC00; /* Saturated yellow for toggle button */
+    text-decoration: underline;
+}
+
+.collapsible-content {
+    display: none;
+    padding: 10px;
+    background-color: #EBF5FB; /* Very light blue for collapsible content */
+    border-radius: 5px;
+    margin-top: 10px;
+    color: #333; /* Darker text for readability */
+}
+
+.code-block {
+    background-color: #444; /* Dark gray for contrast */
+    color: #FFF;
+    padding: 10px;
+    border-radius: 5px;
+    overflow-x: auto;
+    font-size: 14px;
+}
+.video-description-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.video-description {
+    margin-left: 20px;
+    max-width: 300px;
+    color: #333;
+    font-size: 14px;
+}
+
+.connecting-text {
+    margin: 15px 0;
+    color: #555;
+    font-style: italic;
+}
+
+
