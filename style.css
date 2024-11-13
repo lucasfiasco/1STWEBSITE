@@ -76,6 +76,7 @@ body {
     margin: 20px;
     float: right;
     font-family: "Lucida Console", "Courier New", monospace;
+    background-color: #fff;
 }
 
 #todo-list h2 {
@@ -102,16 +103,24 @@ body {
     color: #333;
 }
 
+#main-content {
+    float: left;
+    width: calc(100% - 400px);
+    margin-right: 20px;
+}
+
+#python-section, #cpp-section {
+    width: 100%;
+    margin-bottom: 20px;/
+}
+
 #python-section {
     border: 2px solid #FFCC00; 
     padding: 15px;
-    width: calc(65% + 75px);
-    margin: 20px 10px 20px 20px;
     font-family: "Lucida Console", "Courier New", monospace;
     background-color: #CFE2F3; 
     color: #333; 
     border-radius: 8px;
-    float: left;
 }
 
 #python-section h2 {
@@ -149,6 +158,7 @@ body {
     overflow-x: auto;
     font-size: 14px;
 }
+
 .video-description-container {
     display: flex;
     align-items: center;
@@ -169,24 +179,64 @@ body {
 }
 
 #cpp-section {
-    border: 2px solid #FFCC00; 
-    padding: 15px;
-    width: calc(65% + 75px);
-    margin: 20px 10px 20px 20px;
+    border: 2px solid #264de4;
     font-family: "Lucida Console", "Courier New", monospace;
-    background-color: #CFE2F3; 
+    background-color: #e0f0ff;
     color: #333; 
     border-radius: 8px;
-    float: left;
 }
 
 #cpp-section h2 {
     text-align: center;
-    color: #FFCC00; 
+    color: #264de4;
     font-size: 20px;
 }
 
 #cpp-section img {
     display: block;
     margin: 10px auto;
+}
+
+
+#cpp-section .toggle-button {
+    color: #264de4; 
+}
+
+#cpp-section .collapsible-content {
+    background-color: #d0e8ff;
+    color: #333;
+}
+
+#cpp-section .code-block {
+    background-color: #1e3a8a;
+    color: #fff;
+}
+
+body::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+@media (max-width: 1200px) {
+    #main-content {
+        width: calc(100% - 320px);
+    }
+}
+
+@media (max-width: 800px) {
+    #main-content, #todo-list {
+        float: none;
+        width: 100%;
+        margin: 0;
+    }
+
+    .grid-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 500px) {
+    .grid-container {
+        grid-template-columns: 1fr;
+    }
 }
