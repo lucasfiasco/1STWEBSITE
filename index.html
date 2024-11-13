@@ -84,6 +84,18 @@
                         </p>
                     </div>
 
+                    <p class="connecting-text">Next one is :Fire:</p>
+
+                    <div class="video-description-container">
+                        <video width="400" controls>
+                            <source src="Assets/videos/ParticleSystem3.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        <p class="video-description">
+                            <strong>Particle System 3:</strong>Note: This version i did the day after making this engine, it is much more refined and optimized and can handle about 3000 particles on a small circle radius, this video shows the best version i could muster that has next to no visual problems, some mathmatical errors/oversights however i believe this one looks the best :)
+                        </p>
+                    </div>
+
                     <div>
                         <p>I kinda just messed around with the settings as problems crept up with particles sticking inside one another or the boundaries when they were too small with too large of a gravity, but small gravities looking ugly with particles falling slowly and so ig its dealers pick with how it looks.</p>
                         <p>My biggest take from this is that python sucks for these kinda simulations as ik using pygame isnt amazing as its not optimized AT ALL and there are better libraries but i think for a fluid simulator c++ c or c# is best. ALTHOUGH do note my MATHS is NOT 100% correct in this AT ALL i did my best tho :)</p>
@@ -94,177 +106,304 @@
                     <div class="collapsible-content">
                         <pre class="code-block">
                             <code>
-                                import pygame
-                                import sys
-                                import math
-                                import random
-                                
-                                pygame.init()
-                                
-                                WIDTH, HEIGHT = 1600, 900
-                                screen = pygame.display.set_mode((WIDTH, HEIGHT))
-                                pygame.display.set_caption("Pygame Physics - Multiple Interacting Balls with Angle-Based Bounce")
-                                
-                                BLACK = (0, 0, 0)
-                                GREEN = (0, 255, 0)
-                                WHITE = (255, 255, 255)
-                                
-                                border_thickness = 7
-                                border_offset = 50
-                                
-                                left = border_offset + border_thickness
-                                right = WIDTH - (border_offset + border_thickness)
-                                top = border_offset + border_thickness
-                                bottom = HEIGHT - (border_offset + border_thickness)
-                                
-                                circle_radius = 7 #17 #7
-                                gravity = 0.175 #0.1 #0.175
-                                bounce_damping = 0.5
-                                friction = 1
-                                
-                                num_particles = 425 #250 #425
-                                spawn_top = top + 100
-                                spawn_bottom = HEIGHT // 2
-                                
-                                balls = []
-                                for _ in range(num_particles):
-                                    x = random.randint(left + circle_radius, right - circle_radius)
-                                    y = random.randint(spawn_top, spawn_bottom)
-                                    balls.append({
-                                        "x": x,
-                                        "y": y,
-                                        "velocity_x": random.uniform(-1, 1),
-                                        "velocity_y": random.uniform(-1, 1)
-                                    })
-                                
-                                repel_radius = 200
-                                repel_force = 7
-                                
-                                suction_radius = 200
-                                suction_force = 7
-                                
-                                clock = pygame.time.Clock()
-                                running = True
-                                
-                                font = pygame.font.SysFont(None, 30)
-                                
-                                def get_color_from_speed(speed, max_speed=10):
-                                    normalized_speed = min(speed / max_speed, 1)
-                                
-                                    if normalized_speed < 0.25:
-                                        red = 0
-                                        green = int(255 * (normalized_speed / 0.25))
-                                        blue = 255 - int(255 * (normalized_speed / 0.25))
-                                    elif normalized_speed < 0.5:
-                                        red = int(255 * ((normalized_speed - 0.25) / 0.25))
-                                        green = 255
-                                        blue = 0
-                                    elif normalized_speed < 0.75:
-                                        red = 255
-                                        green = 255 - int(90 * ((normalized_speed - 0.5) / 0.25))
-                                        blue = 0
-                                    else:
-                                        red = 255
-                                        green = 165 - int(165 * ((normalized_speed - 0.75) / 0.25))
-                                        blue = 0
-                                
-                                    color = (max(0, min(255, red)), max(0, min(255, green)), max(0, min(255, blue)))
-                                    return color
-                                
-                                while running:
-                                    screen.fill(BLACK)
-                                    
-                                    pygame.draw.rect(screen, GREEN, (border_offset, border_offset,
-                                                                     WIDTH - 2 * border_offset,
-                                                                     HEIGHT - 2 * border_offset), border_thickness)
-                                
-                                    mouse_x, mouse_y = pygame.mouse.get_pos()
-                                    mouse_buttons = pygame.mouse.get_pressed()
-                                
-                                    fps = int(clock.get_fps())
-                                    fps_text = font.render(f"FPS: {fps}", True, WHITE)
-                                    screen.blit(fps_text, (WIDTH - fps_text.get_width() - 10, 10))
-                                
-                                    for ball in balls:
-                                        ball["velocity_y"] += gravity
-                                        ball["y"] += ball["velocity_y"]
-                                        ball["x"] += ball["velocity_x"]
-                                
-                                        if ball["y"] + circle_radius >= bottom:
-                                            ball["velocity_x"] *= friction
-                                            ball["y"] = bottom - circle_radius
-                                            ball["velocity_y"] = -ball["velocity_y"] * bounce_damping
-                                
-                                        if ball["y"] - circle_radius <= top:
-                                            ball["y"] = top + circle_radius
-                                            ball["velocity_y"] = -ball["velocity_y"] * bounce_damping
-                                
-                                        if ball["x"] - circle_radius <= left:
-                                            ball["x"] = left + circle_radius
-                                            ball["velocity_x"] = -ball["velocity_x"] * bounce_damping
-                                
-                                        if ball["x"] + circle_radius >= right:
-                                            ball["x"] = right - circle_radius
-                                            ball["velocity_x"] = -ball["velocity_x"] * bounce_damping
-                                
-                                    if mouse_buttons[0]:
-                                        for ball in balls:
-                                            dx = ball["x"] - mouse_x
-                                            dy = ball["y"] - mouse_y
-                                            distance = math.hypot(dx, dy)
-                                            if distance < repel_radius:
-                                                angle = math.atan2(dy, dx)
-                                                ball["velocity_x"] += math.cos(angle) * repel_force * random.uniform(0.5, 1.5)
-                                                ball["velocity_y"] += math.sin(angle) * repel_force * random.uniform(0.5, 1.5)
-                                
-                                    if mouse_buttons[2]: 
-                                        for ball in balls:
-                                            dx = mouse_x - ball["x"]
-                                            dy = mouse_y - ball["y"]
-                                            distance = math.hypot(dx, dy)
-                                            if distance < suction_radius:
-                                                angle = math.atan2(dy, dx)
-                                                ball["velocity_x"] += math.cos(angle) * suction_force * random.uniform(0.5, 1.5)
-                                                ball["velocity_y"] += math.sin(angle) * suction_force * random.uniform(0.5, 1.5)
-                                
-                                    for i in range(len(balls)):
-                                        for j in range(i + 1, len(balls)):
-                                            dx = balls[j]["x"] - balls[i]["x"]
-                                            dy = balls[j]["y"] - balls[i]["y"]
-                                            distance = math.hypot(dx, dy)
-                                
-                                            if distance < 2 * circle_radius:
-                                                angle = math.atan2(dy, dx)
-                                
-                                                v1 = balls[i]["velocity_x"] * math.cos(angle) + balls[i]["velocity_y"] * math.sin(angle)
-                                                v2 = balls[j]["velocity_x"] * math.cos(angle) + balls[j]["velocity_y"] * math.sin(angle)
-                                                balls[i]["velocity_x"] += (v2 - v1) * math.cos(angle)
-                                                balls[i]["velocity_y"] += (v2 - v1) * math.sin(angle)
-                                                balls[j]["velocity_x"] += (v1 - v2) * math.cos(angle)
-                                                balls[j]["velocity_y"] += (v1 - v2) * math.sin(angle)
-                                
-                                                overlap = 2 * circle_radius - distance
-                                                correction = overlap / 2
-                                                balls[i]["x"] -= correction * math.cos(angle)
-                                                balls[i]["y"] -= correction * math.sin(angle)
-                                                balls[j]["x"] += correction * math.cos(angle)
-                                                balls[j]["y"] += correction * math.sin(angle)
-                                
-                                    for ball in balls:
-                                        speed = math.hypot(ball["velocity_x"], ball["velocity_y"])
-                                        color = get_color_from_speed(speed)
-                                        pygame.draw.circle(screen, color, (int(ball["x"]), int(ball["y"])), circle_radius)
-                                
-                                    for event in pygame.event.get():
-                                        if event.type == pygame.QUIT:
-                                            running = False
-                                
-                                    pygame.display.flip()
-                                    clock.tick(120)
-                                
-                                pygame.quit()
-                                sys.exit()
-                                
+import pygame
+import sys
+import math
+import random
+
+pygame.init()
+
+WIDTH, HEIGHT = 1600, 900
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Particle Physics Engine")
+
+BLACK = (0, 0, 0)
+GREEN = (0, 255, 0)
+WHITE = (255, 255, 255)
+
+border_thickness = 7
+border_offset = 50
+
+left = border_offset + border_thickness
+right = WIDTH - (border_offset + border_thickness)
+top = border_offset + border_thickness
+bottom = HEIGHT - (border_offset + border_thickness)
+
+circle_radius = 12
+gravity = 0.1
+bounce_damping = 0.65
+friction = 0.99
+
+num_particles = 675
+spawn_top = top + 120
+spawn_bottom = HEIGHT // 2
+
+balls = []
+for _ in range(num_particles):
+    x = random.randint(left + circle_radius, right - circle_radius)
+    y = random.randint(spawn_top, spawn_bottom)
+    balls.append({
+        "x": x,
+        "y": y,
+        "velocity_x": random.uniform(-1, 1),
+        "velocity_y": random.uniform(-1, 1),
+        "color": WHITE,
+        "last_speed": 0
+    })
+
+repel_radius = 200
+repel_force = 7
+
+suction_radius = 200
+suction_force = 7
+
+cell_size = 50
+grid = {}
+
+clock = pygame.time.Clock()
+running = True
+
+font = pygame.font.SysFont(None, 30)
+
+def get_color_from_speed(speed, max_speed=10):
+    normalized_speed = min(speed / max_speed, 1)
+    if normalized_speed < 0.25:
+        red, green_val, blue = 0, int(255 * (normalized_speed / 0.25)), 255 - int(255 * (normalized_speed / 0.25))
+    elif normalized_speed < 0.5:
+        red, green_val, blue = int(255 * ((normalized_speed - 0.25) / 0.25)), 255, 0
+    elif normalized_speed < 0.75:
+        red, green_val, blue = 255, 255 - int(90 * ((normalized_speed - 0.5) / 0.25)), 0
+    else:
+        red, green_val, blue = 255, 165 - int(165 * ((normalized_speed - 0.75) / 0.25)), 0
+    return (max(0, min(255, red)), max(0, min(255, green_val)), max(0, min(255, blue)))
+
+def update_grid():
+    grid.clear()
+    for idx, ball in enumerate(balls):
+        cell_x, cell_y = int(ball["x"] // cell_size), int(ball["y"] // cell_size)
+        if (cell_x, cell_y) not in grid:
+            grid[(cell_x, cell_y)] = []
+        grid[(cell_x, cell_y)].append(idx)
+
+def get_neighboring_cells(cell_x, cell_y):
+    neighbors = []
+    for dx in [-1, 0, 1]:
+        for dy in [-1, 0, 1]:
+            neighbors.append((cell_x + dx, cell_y + dy))
+    return neighbors
+
+while running:
+    screen.fill(BLACK)
+    
+    pygame.draw.rect(screen, GREEN, (border_offset, border_offset,
+                                     WIDTH - 2 * border_offset,
+                                     HEIGHT - 2 * border_offset), border_thickness)
+
+    mouse_x, mouse_y = pygame.mouse.get_pos()
+    mouse_buttons = pygame.mouse.get_pressed()
+
+    fps = int(clock.get_fps())
+    fps_text = font.render(f"FPS: {fps}", True, WHITE)
+    screen.blit(fps_text, (WIDTH - fps_text.get_width() - 10, 10))
+
+    update_grid()
+
+    for ball in balls:
+        if ball["y"] + circle_radius < bottom:
+            ball["velocity_y"] += gravity
+        ball["y"] += ball["velocity_y"]
+        ball["x"] += ball["velocity_x"]
+
+        if ball["x"] - circle_radius <= left:
+            ball["x"] = left + circle_radius
+            ball["velocity_x"] = -ball["velocity_x"] * bounce_damping
+        elif ball["x"] + circle_radius >= right:
+            ball["x"] = right - circle_radius
+            ball["velocity_x"] = -ball["velocity_x"] * bounce_damping
+
+        if ball["y"] + circle_radius >= bottom:
+            ball["y"] = bottom - circle_radius
+            if ball["velocity_y"] > 0:
+                ball["velocity_y"] = -ball["velocity_y"] * bounce_damping
+                ball["velocity_x"] *= friction
+        elif ball["y"] - circle_radius <= top:
+            ball["y"] = top + circle_radius
+            ball["velocity_y"] = -ball["velocity_y"] * bounce_damping
+
+        VELOCITY_THRESHOLD = 0.05
+        POSITION_THRESHOLD = 1
+
+        if abs(ball["y"] + circle_radius - bottom) <= POSITION_THRESHOLD and abs(ball["velocity_x"]) < VELOCITY_THRESHOLD and abs(ball["velocity_y"]) < VELOCITY_THRESHOLD:
+            ball["velocity_x"] = 0
+            ball["velocity_y"] = 0
+            ball["y"] = bottom - circle_radius
+
+        if abs(ball["y"] - circle_radius - top) <= POSITION_THRESHOLD and abs(ball["velocity_x"]) < VELOCITY_THRESHOLD and abs(ball["velocity_y"]) < VELOCITY_THRESHOLD:
+            ball["velocity_x"] = 0
+            ball["velocity_y"] = 0
+            ball["y"] = top + circle_radius 
+
+        if abs(ball["x"] - circle_radius - left) <= POSITION_THRESHOLD and abs(ball["velocity_x"]) < VELOCITY_THRESHOLD and abs(ball["velocity_y"]) < VELOCITY_THRESHOLD:
+            ball["velocity_x"] = 0
+            ball["velocity_y"] = 0
+            ball["x"] = left + circle_radius 
+
+        if abs(ball["x"] + circle_radius - right) <= POSITION_THRESHOLD and abs(ball["velocity_x"]) < VELOCITY_THRESHOLD and abs(ball["velocity_y"]) < VELOCITY_THRESHOLD:
+            ball["velocity_x"] = 0
+            ball["velocity_y"] = 0
+            ball["x"] = right - circle_radius
+
+    if mouse_buttons[0]:
+        for ball in balls:
+            dx, dy = ball["x"] - mouse_x, ball["y"] - mouse_y
+            distance = math.hypot(dx, dy)
+            if distance < repel_radius and distance != 0:
+                angle = math.atan2(dy, dx)
+                force = repel_force * random.uniform(0.5, 1.5)
+                ball["velocity_x"] += math.cos(angle) * force
+                ball["velocity_y"] += math.sin(angle) * force
+
+    if mouse_buttons[2]:
+        for ball in balls:
+            dx, dy = mouse_x - ball["x"], mouse_y - ball["y"]
+            distance = math.hypot(dx, dy)
+            if distance < suction_radius and distance != 0:
+                angle = math.atan2(dy, dx)
+                force = suction_force * random.uniform(0.5, 1.5)
+                ball["velocity_x"] += math.cos(angle) * force
+                ball["velocity_y"] += math.sin(angle) * force
+
+    for (cell_x, cell_y), cell in grid.items():
+        neighboring_cells = get_neighboring_cells(cell_x, cell_y)
+        for neighbor in neighboring_cells:
+            if neighbor in grid:
+                neighbor_cell = grid[neighbor]
+                for i in range(len(cell)):
+                    for j in range(len(neighbor_cell)):
+                        if neighbor == (cell_x, cell_y) and j <= i:
+                            continue
+                        idx_i, idx_j = cell[i], neighbor_cell[j]
+                        ball_i, ball_j = balls[idx_i], balls[idx_j]
+                        dx = ball_j["x"] - ball_i["x"]
+                        dy = ball_j["y"] - ball_i["y"]
+                        distance_sq = dx * dx + dy * dy
+
+                        if distance_sq < (2 * circle_radius) ** 2 and distance_sq != 0:
+                            distance = math.sqrt(distance_sq)
+                            if distance == 0:
+                                distance = 0.1
+                                dx = 0.1
+                                dy = 0.1
+                            angle = math.atan2(dy, dx)
+                            overlap = 2 * circle_radius - distance
+                            if overlap > 0:
+                                nx = dx / distance
+                                ny = dy / distance
+
+                                correction = overlap / 2
+                                ball_i["x"] -= nx * correction
+                                ball_i["y"] -= ny * correction
+                                ball_j["x"] += nx * correction
+                                ball_j["y"] += ny * correction
+
+                                dvx = ball_j["velocity_x"] - ball_i["velocity_x"]
+                                dvy = ball_j["velocity_y"] - ball_i["velocity_y"]
+                                dot = dvx * nx + dvy * ny
+                                if dot > 0:
+                                    continue  
+
+                                ball_i["velocity_x"] += dot * nx
+                                ball_i["velocity_y"] += dot * ny
+                                ball_j["velocity_x"] -= dot * nx
+                                ball_j["velocity_y"] -= dot * ny
+
+    for ball in balls:
+        speed = math.hypot(ball["velocity_x"], ball["velocity_y"])
+        if abs(speed - ball["last_speed"]) > 0.1:
+            ball["color"] = get_color_from_speed(speed)
+            ball["last_speed"] = speed
+        pygame.draw.circle(screen, ball["color"], (int(ball["x"]), int(ball["y"])), circle_radius)
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+    pygame.display.flip()
+    clock.tick(120)
+
+pygame.quit()
+sys.exit()
+
+                            </code>
+                        </pre>
+                    </div>
+                    <div>
+                        <p>If anyone gives a monkey about the maths behind all this, i did it really simply im not smart enough to use crazy equations with itegration and differentials so basically the entirety of the maths is the pythagorean theorum used to calculator velocities between boundaries and collisions and basic trig for calculating the angle in which particles bounce :)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="cpp-section">
+        <h2>C++ Section</h2>
+        <img src="Assets/images/C++.png" alt="C++ Section" width="100" height="100" title="C++ Section">
+        <p>This section is dedicated to C++ projects and ideas/basically my python projects but better. I will do whatever the hell i decide seems interesting.</p>
+
+        <h3 class="toggle-button">Physics Engines</h3>
+        <div class="collapsible-content">
+            <p>This section contains all my C++ projects in a nice clean fashion with pop down and up boxes :)</p>
+            
+            <div class="engine-item">
+                <h4 class="toggle-button">Particle Engine</h4>
+                <div class="collapsible-content">
+                    <p>Below are videos demonstrating the particle engine with different configurations. I didnt exactly record my steps as i went along as i did it in almost 1 sitting from the time of 13:30 - 18:35 12th November - short break or 2 when i had to walk home from school or smt like that</p>
+                    
+                    <div class="video-description-container">
+                        <video width="400" controls>
+                            <source src="Assets/videos/ParticleSystem1.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        <p class="video-description">
+                            <strong>Particle System 1:</strong> This is one of the many attempts and configurations i tried, this has a 17unit circle radius, 0.1unit gravity-strength and 250 particles, this runs somewhat smoothly with about 40fps but isnt too exciting with only 250 particles.
+                        </p>
+                    </div>
+
+                    <p class="connecting-text">The next video shows a slightly more exciting version i guess.</p>
+                    
+                    <div class="video-description-container">
+                        <video width="400" controls>
+                            <source src="Assets/videos/ParticleSystem2.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        <p class="video-description">
+                            <strong>Particle System 2:</strong> This example has a 7unit circle radius, 0.175unit gravity-strength and 425 particles. Obviously the FPS is much worse sitting at about 15 throughout but it does have twice as many particles.
+                        </p>
+                    </div>
+
+                    <p class="connecting-text">Next one is :Fire:</p>
+
+                    <div class="video-description-container">
+                        <video width="400" controls>
+                            <source src="Assets/videos/ParticleSystem3.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        <p class="video-description">
+                            <strong>Particle System 3:</strong>Note: This version i did the day after making this engine, it is much more refined and optimized and can handle about 3000 particles on a small circle radius, this video shows the best version i could muster that has next to no visual problems, some mathmatical errors/oversights however i believe this one looks the best :)
+                        </p>
+                    </div>
+
+                    <div>
+                        <p>I kinda just messed around with the settings as problems crept up with particles sticking inside one another or the boundaries when they were too small with too large of a gravity, but small gravities looking ugly with particles falling slowly and so ig its dealers pick with how it looks.</p>
+                        <p>My biggest take from this is that python sucks for these kinda simulations as ik using pygame isnt amazing as its not optimized AT ALL and there are better libraries but i think for a fluid simulator c++ c or c# is best. ALTHOUGH do note my MATHS is NOT 100% correct in this AT ALL i did my best tho :)</p>
+                        <p>Lastly my final note for this project: bro i have to write all of this in HTML and format it so it looks good i spent like 3 hours doing all of this and tryna do other stuff i failed at such as making the code runable from the website so yall can try it out BUT THAT IS HARD anyway next time xx</p>
+                    </div>
+
+                    <h4 class="toggle-button">Particle Engine Code</h4>
+                    <div class="collapsible-content">
+                        <pre class="code-block">
+                            <code>
+                                Code goes here:
                             </code>
                         </pre>
                     </div>
