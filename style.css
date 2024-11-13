@@ -111,25 +111,38 @@ body {
 
 #python-section, #cpp-section {
     width: 100%;
-    margin-bottom: 20px;/
+    margin-bottom: 20px;
+    padding: 15px;
+    font-family: "Lucida Console", "Courier New", monospace;
+    color: #333;
+    border-radius: 8px;
+    box-sizing: border-box; /* Ensures padding is included within the width */
 }
 
 #python-section {
-    border: 2px solid #FFCC00; 
-    padding: 15px;
-    font-family: "Lucida Console", "Courier New", monospace;
-    background-color: #CFE2F3; 
-    color: #333; 
-    border-radius: 8px;
+    border: 2px solid #FFCC00;
+    background-color: #CFE2F3;
 }
 
-#python-section h2 {
+#cpp-section {
+    border: 2px solid #264de4;
+    background-color: #e0f0ff;
+}
+
+#python-section h2, #cpp-section h2 {
     text-align: center;
-    color: #FFCC00; 
     font-size: 20px;
 }
 
-#python-section img {
+#python-section h2 {
+    color: #FFCC00;
+}
+
+#cpp-section h2 {
+    color: #264de4;
+}
+
+#python-section img, #cpp-section img {
     display: block;
     margin: 10px auto;
 }
@@ -137,18 +150,26 @@ body {
 .toggle-button {
     font-size: 18px;
     cursor: pointer;
-    color: #FFCC00; 
     text-decoration: underline;
+}
+
+#python-section .toggle-button {
+    color: #FFCC00;
+}
+
+#cpp-section .toggle-button {
+    color: #264de4;
 }
 
 .collapsible-content {
     display: none;
     padding: 10px;
-    background-color: #EBF5FB;
     border-radius: 5px;
     margin-top: 10px;
-    color: #333; 
+    color: #333;
+    box-sizing: border-box;
 }
+
 
 .code-block {
     background-color: #444;
